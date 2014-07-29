@@ -436,14 +436,17 @@ void kfusion::device::ComputeIcpHelper::operator()(const Points& vprev, const No
     allocate_buffer(buffer, partials_count);
 
     icp_helper_kernel<<<grid, block, 0, s>>>(*this, buffer);
+    cudaSafeCall ( cudaStreamSynchronize(s) );
     cudaSafeCall ( cudaGetLastError () );
 
     int b = Policy::FINAL_REDUCE_CTA_SIZE;
     int g = Policy::TOTAL;
     icp_final_reduce_kernel<<<g, b, 0, s>>>(buffer, partials_count, buffer.ptr(Policy::TOTAL));
+    cudaSafeCall ( cudaStreamSynchronize(s) );
     cudaSafeCall ( cudaGetLastError () );
 
     cudaSafeCall ( cudaMemcpyAsync(data, buffer.ptr(Policy::TOTAL), Policy::TOTAL * sizeof(float), cudaMemcpyDeviceToHost, s) );
+    cudaSafeCall ( cudaStreamSynchronize(s) );
     cudaSafeCall ( cudaGetLastError () );
 }
 
