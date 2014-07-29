@@ -100,10 +100,12 @@ namespace kfusion
 
             float3 ns = aff.R * tr(ncurr(y, x));
             nd = tr(tex2D(nprev_tex, coo.x, coo.y));
+            if (isnan(nd.x))
+                return 200;
 
             float cosine = fabs(dot(ns, nd));
             if (cosine < min_cosine)
-                return 200;
+                return 240;
             return 0;
         }
 #endif
