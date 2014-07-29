@@ -99,8 +99,8 @@ void kfusion::OpenNISource::open (int device)
     XnLicense license;
     const char* vendor = "PrimeSense";
     const char* key = "0KOIk2JeIBYClPWVnMoRKn5cdY4=";
-    sprintf (license.strKey, key);
-    sprintf (license.strVendor, vendor);
+    sprintf (license.strKey, "%s", key);
+    sprintf (license.strVendor, "%s", vendor);
 
     rc = impl_->context.AddLicense (license);
     if (rc != XN_STATUS_OK)
